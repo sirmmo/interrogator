@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block content %}
+	<div class="jumbotron">
+		<div class="container">
+			<h1>{{questionnaire.name}}</h1>
+		</div>
+	</div>
+	<div class="container">
+		<p>{{questionnaire.description}}</p>
+		{% for question in questionnaire.questions.all %}
+		<hr>
+			<div class="row question" data-q="{{question.id}}">
+				<p class="lead col-xs-12">{{question.question}}</p>
+				{% for option in question.options.all %}
+				<div class="radio col-xs-12">
+					<label>
+						<input type="radio" name="q_{{question.id}}" id="q_{{question.id}}_{{option.id}}" value="{{option.id}}" >
+						{{option.text}}
+					</label>
+				</div>
+				{% endfor %}
+			</div>
+		{% endfor %}
+
+		<div class="row">
+			<button class="btn col-xs-12">Submit</button>
+		</div>
+	</div>
+
+{% endblock content %}
