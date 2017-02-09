@@ -1,27 +1,45 @@
 {% extends "base.html" %}
 
 {% block content %}
-	<div class="row">
-		<input type="text" name="title" value="{{questionnaire.title}}">
+<div class="jumbotron">
+	<div class="container">
+		<h1><input type="text" name="title" value="{{questionnaire.title}}" class="" ></h1>
 	</div>
+</div>
+<div class="container">
 	<div class="row">
-		<textarea>{{questionnaire.description}}</textarea>
+		<textarea class="form-control col-xs-12" >{{questionnaire.description}}</textarea>
 	</div>
 	{% for question in questionnaire.questions.all %}
 		<div class="row question" data-q="{{question.id}}">
-			<em>{{question.question}}</em>
+			<em><input type="text" value="{{question.question}}" class="form-control" ></em>
 			{% for option in question.options.all %}
 			<div class="radio">
-				<label>
-					<input type="radio" name="q_{{question.id}}" id="q_{{question.id}}_{{option.id}}" value="{{option.id}}" >
-					{{option.text}}
+				<label class="form-inline" >
+					<input type="radio" disabled name="q_{{question.id}}" id="q_{{question.id}}_{{option.id}}" value="{{option.id}}" >
+					<input type="text" class="field-text form-control" value="{{option.text}}">
+					<input type="text" class="field-value form-control" value="{{option.value}}">
 				</label>
+			</div>
+
+			{% empty %}
+				<div class="form-group col-xs-12 answer">
+					<input type="text" class="form-control" disabled id="q_{{question.id}}" name="q_{{question.id}}" >
+				</div>
+			{% endfor %}
+
+
+			<div class="row">
+				<button class="btn col-xs-12 btn-success" id="add_question"><i class="fa fa-plus fa-fw"></i>Add Option</button>
 			</div>
 		</div>
 	{% endfor %}
 
 	<div class="row">
+		<button class="btn col-xs-12 btn-success" id="add_question"><i class="fa fa-plus fa-fw"></i>Add Question</button>
+	</div>
+	<div class="row">
 		<button class="btn col-xs-12">Submit</button>
 	</div>
-
+</div>
 {% endblock content %}

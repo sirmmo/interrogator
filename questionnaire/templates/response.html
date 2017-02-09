@@ -1,7 +1,48 @@
 {% extends "base.html" %}
 
+{% block meta %}
+
+<meta property="og:title" content="{{response.questionnaire.name}} - {{response.title}}" />
+<meta property="og:description" content="{{response.text}}" />
+<meta property="og:image" content="http://questionnaire.ingmmo.com/response/{{response.id}}/img" />
+<meta property="fb:app_id" content="726461980782350" />
+<meta property="og:type" content="website" />
+<meta property="og:locale" content="it_it" />
+
+{% endblock meta %}
+
 {% block content %}
 	
-	{{done.response.text}}
+	<div class="jumbotron">
+		<div class="container">
+			<h1 class="col-lg-6 col-lg-offset-3"><img class="header" src="http://questionnaire.ingmmo.com/response/{{response.id}}/img">{{response.title}}</h1>
+		</div>
+	</div>
+
+	<div class="container">
+		<p class="col-lg-6 col-lg-offset-3">{{response.text}}</p>
+		<p>
+			<div
+			  class="fb-like col-lg-6 col-lg-offset-3"
+			  data-share="true"
+			  data-width="450"
+			  data-show-faces="true">
+			</div>
+			<div class="col-lg-6 col-lg-offset-3">
+			<a class="twitter-share-button"
+				data-text="#{{questionnaire.name}} - {{response.title}}"
+			  	href="https://twitter.com/share">Tweet</a></div>
+		</p>
+	</div>
 
 {% endblock content %}
+
+
+{% block script %}
+
+<style type="text/css">
+	.header{
+		height: 150px;
+	}
+</style>
+{% endblock script %}

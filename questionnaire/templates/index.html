@@ -1,7 +1,35 @@
 {% extends "base.html" %}
 
 {% block content %}
-	
-	{{done.response.text}}
-
+<div class="jumbotron">
+	<div class="container">
+		<h1>Questionari</h1>
+	</div>
+</div>
+	<div class="container">
+	{% for questionnaire in questionnaires %}
+		<div class="row">
+			<div class="col-xs-12">
+				{% if questionnaire.closed %}
+					<i class="fa fa-fw fa-times" style="color:red;"></i>
+				{% else %}
+					<i class="fa fa-fw fa-check" style="color:green;"></i>
+				{% endif %}
+				<span class="name">{{questionnaire.name}}</span> 
+				<div class="badge">{{questionnaire.answers.all.count}}</div> 
+				<a title="Delete" disabled class="btn btn-warning pull-right" href="/quest/{{questionnaire.id}}/delete"><i class="fa fa-fw fa-trash"></i></a>
+				<a title="The Questionnaire" class="btn btn-default pull-right " {% if questionnaire.closed %}disabled{% endif %} href="/quest/{{questionnaire.id}}/new"><i class="fa fa-fw fa-globe"></i></a>
+				{% if questionnaire.closed %}
+				<a title="Activate" class="btn btn-default pull-right" href="/quest/{{questionnaire.id}}/activate"><i class="fa fa-fw fa-play"></i></a>
+				{% else %}
+				<a title="Deactivate" class="btn btn-default pull-right" href="/quest/{{questionnaire.id}}/deactivate"><i class="fa fa-fw fa-times"></i></a>
+				{% endif %}
+				<a title="Download CSV" class="btn btn-default pull-right" href="/quest/{{questionnaire.id}}/csv"><i class="fa fa-fw fa-calendar"></i></a>
+				<a title="Edit" {% if not questionnaire.editable %}disabled{% endif %} class="btn btn-default pull-right" href="/q/{{questionnaire.id}}"><i class="fa fa-fw fa-pencil"></i></a>
+			</div>
+		</div>
+	{% endfor %}
+	<a title="New" class="btn btn-default col-xs-12" href="/q/new"><i class="fa fa-fw fa-star"></i>New Questionnaire</a>
+		
+	</div>
 {% endblock content %}

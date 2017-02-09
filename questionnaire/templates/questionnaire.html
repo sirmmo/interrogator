@@ -1,5 +1,47 @@
 {% extends "base.html" %}
 
+{% block script %}
+<script>
+	
+	$(function(){
+		$("#submit").click(function(){
+			var ret = [];
+			$(".question").each(function(e,i){
+				var q = $(this).data("q");
+				if ($(this).data("radio") == "1")
+					var a = parseInt($('input[name=q_'+q+']:radio:checked').val());
+				else
+					var a = $(this).find(".answer").find("input").val();
+
+				ret.push({"q":q, "a":a});
+			});
+			console.log(ret);
+
+			$.ajax({
+				method:"POST",
+				url:"/quest/{{questionnaire.id}}/store", 
+				data:{"data":JSON.stringify(ret)}, 
+				success: function(data){
+					window.location= "/quest/{{questionnaire.id}}/"+data;
+				}
+			});
+		});
+	});
+</script>
+<style>
+	h1{font-family: 'Droid Sans', sans-serif;}
+	.jumbotron{
+		background-image: url(/quest/{{questionnaire.id}}/image);
+		background-size: cover;
+		background-position: center center;
+		filter: grayscale(1);
+		-webkit-filter:  grayscale(1);
+		color: white;
+		text-shadow: black 0em 0em 1em;
+	}
+</style>
+{% endblock script %}
+
 {% block content %}
 	<div class="jumbotron">
 		<div class="container">
@@ -8,23 +50,30 @@
 	</div>
 	<div class="container">
 		<p>{{questionnaire.description}}</p>
+		<div class="row">{{questionnaire.template_header|safe}}</div>
 		{% for question in questionnaire.questions.all %}
-		<hr>
-			<div class="row question" data-q="{{question.id}}">
-				<p class="lead col-xs-12">{{question.question}}</p>
+			<hr />
+			<div class="row question" data-q="{{question.id}}" data-radio="{% if question.options.count > 0 %}1{% else %}0{% endif %}">
+				<p class="lead col-xs-12"><em>{{forloop.counter}}. {{question.question}}</em></p>
 				{% for option in question.options.all %}
-				<div class="radio col-xs-12">
+				<div class="radio col-xs-12 answer">
 					<label>
-						<input type="radio" name="q_{{question.id}}" id="q_{{question.id}}_{{option.id}}" value="{{option.id}}" >
+						<input class="opt" type="radio" name="q_{{question.id}}" id="q_{{question.id}}_{{option.id}}" value="{{option.id}}" />
 						{{option.text}}
 					</label>
+				</div>
+				{% empty %}
+				<div class="form-group col-xs-12 answer">
+					<textarea  class="form-control" rows="5" id="q_{{question.id}}" name="q_{{question.id}}" ></textarea>
 				</div>
 				{% endfor %}
 			</div>
 		{% endfor %}
 
 		<div class="row">
-			<button class="btn col-xs-12">Submit</button>
+			<div class="form-group col-xs-12">
+				<button class="btn  col-xs-12" id="submit">Submit</button>
+			</div>
 		</div>
 	</div>
 
